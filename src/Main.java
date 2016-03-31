@@ -9,8 +9,8 @@ public class Main {
 
     public static void main(String[] args) {
         {
-            String url = "jdbc:postgresql://localhost:5432/Computerproject";
-            //String url = "jdbc:postgresql://localhost:5432/Computerproject";
+//            String url = "jdbc:postgresql://localhost:5432/Computerproject";
+            String url = "jdbc:postgresql://localhost:5432/postgres";
             String user = "postgres";
             String password = "12";
             Connection con = null;
@@ -47,9 +47,9 @@ public class Main {
                     case "Listall":case "listall":case "la":case "LA":
                         DBcalls.Printallparts(con);
                         break;
-                    case "Listallprint":case "listallprice":case "lap":case "LAP":
-                        DBcalls.Printallpartswithprice(con);
-                        break;
+//                    case "Listallprint":case "listallprice":case "lap":case "LAP":
+//                        DBcalls.Printallpartswithprice(con);
+//                        break;
                     case "Listallsystems":case "LAS":case "las":case "listallsystems":
                         DBcalls.listsystems(con);
                         break;

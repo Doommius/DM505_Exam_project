@@ -1,4 +1,4 @@
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,87 +13,70 @@ public class DBcalls {
     public static void main(String[] args) {
     }
 
-    private static String checktable(String Part_ID) {
-        if (Part_ID.contains("CPU-")) {
-            return "cpu";
-        } else if (Part_ID.contains("HDD-")) {
-            return "Storage";
-        } else if (Part_ID.contains("MB-")) {
-            return "motherboard";
-        } else if (Part_ID.contains("RAM-")) {
-            return "ram";
-        } else if (Part_ID.contains("GFX-")) {
-            return "graphics";
-        } else if (Part_ID.contains("SYS-")) {
-            return "computer";
-        } else if (Part_ID.contains("CASE-")) {
-            return "computercase";
-        } else {
-            System.out.println("Part or system not listed in database");
-            return null;
-        }
 
-
-    }
-
+    // converted to new format
     public static void Printallparts(Connection con) {
-        //Prints all parts in system.
-        List<String> allpartsquery = new ArrayList<String>();
-        allpartsquery.add("SELECT cpu.model, cpu.stock FROM public.cpu;");
-        allpartsquery.add("SELECT graphics.model, graphics.stock FROM public.graphics;");
-        allpartsquery.add("SELECT ram.model, ram.stock FROM public.ram;");
-        allpartsquery.add("SELECT motherboard.model, motherboard.stock FROM public.motherboard;");
-        allpartsquery.add("SELECT storage.model, storage.stock FROM public.storage;");
-        System.out.println("Model" + "                          |" + " Stock");
-        for (String query : allpartsquery) {
-
+        String query = "SELECT model,price,stock from parts;";
             try {
                 Statement st = con.createStatement();
 
 
                 ResultSet rs = st.executeQuery(query);
+                System.out.println("Model                         | Stock | Price");
                 while (rs.next()) {
-                    String model = rs.getString("model");
-                    int stock = rs.getInt("stock");
-                    System.out.println(model + " | " + stock);
+
+                        System.out.print(rs.getString("model"));
+                        System.out.print("| "+rs.getString("stock"));
+                        System.out.println("    | "+rs.getString("price"));
+
+
+
 
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-    }
 
+    // converted to new format only works with single parts atm
     public static void Sellitem(Connection con) {
         //sells an item.
         String Part_ID = null;
-        String Table_ID = null;
+
         Scanner keyboard = new Scanner(System.in);
         System.out.println("Enter the model ID for the part you wish to sell.");
         Part_ID = keyboard.next();
-        Table_ID = checktable(Part_ID);
-        if (Table_ID == null) {
-            return;
-        } else if (Table_ID == "computer") {
+        if (Part_ID.contains("SYS-") ) {
             sellsystem(con, Part_ID);
             return;
         }
         try {
             Statement st = con.createStatement();
-            String query = "UPDATE " + Table_ID + " SET Stock = Stock-1 WHERE model SIMILAR  TO '%" + Part_ID + "%';";
-            System.out.println("sold " + Part_ID);
-            st.executeUpdate(query);
-            System.out.println("Sold 1 x " + Part_ID);
+            ResultSet exsist = (st.executeQuery("SELECT COUNT(*) model From parts where model SIMILAR  TO '%" + Part_ID + "%';"));
+            exsist.next();
+            System.out.println(exsist.getInt(1));
+            if (exsist.getInt(1) == 1){
+
+                String query = "UPDATE parts SET Stock = Stock-1 WHERE model SIMILAR  TO '%" + Part_ID + "%';";
+//                System.out.println("sold " + Part_ID);
+                st.executeUpdate(query);
+                System.out.println("Sold 1 x " + Part_ID);
+            }else if(exsist.getInt(1) > 1){
+                System.out.println("Multiple containing that string found in database");
+            }else{
+                System.out.println("Part does not exsist in Database");
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    //converted to new format
     private static void sellsystem(Connection con, String system) {
         //calculates the price of a system.
         ArrayList<String> syspartlist = new ArrayList<String>();
         int price = 0;
-        String Table_ID = null;
         try {
             Statement st = con.createStatement();
             String query = "Select * FROM  computer  WHERE model SIMILAR  TO '%" + system + "%';";
@@ -105,13 +88,11 @@ public class DBcalls {
             syspartlist.add(rs.getString("Motherboard"));
             syspartlist.add(rs.getString("computercase"));
             syspartlist.add(rs.getString("graphics"));
-            System.out.println(syspartlist.toString());
+//            System.out.println(syspartlist.toString());
             for (String Part_ID : syspartlist) {
-                // System.out.println(Part_ID);
                 if (Part_ID != null) {
-                    Table_ID = checktable(Part_ID);
                     try {
-                        query = "UPDATE " + Table_ID + " SET Stock = Stock-1 WHERE model SIMILAR  TO '%" + Part_ID + "%';";
+                        query = "UPDATE parts SET Stock = Stock-1 WHERE model SIMILAR  TO '%" + Part_ID + "%';";
                         System.out.println("sold " + Part_ID);
                         st.executeUpdate(query);
 
@@ -132,18 +113,15 @@ public class DBcalls {
 
     }
 
+    //converted to new system
     public static void Priceoffer(Connection con) {
         //returns price for parts and systems.
         String Part_ID = null;
-        String Table_ID = null;
         int multiplier = 0;
         Scanner keyboard = new Scanner(System.in);
         System.out.println("Enter the model ID for the part you wish to get a price offer..");
         Part_ID = keyboard.next();
-        Table_ID = checktable(Part_ID);
-        if (Table_ID == null) {
-            return;
-        } else if (Table_ID == "computer") {
+        if (Part_ID.contains("SYS-") ) {
             System.out.println("Enter the multiplier for how many systems you would like to buy..");
             Scanner multiplierinput = new Scanner(System.in);
             multiplier = multiplierinput.nextInt();
@@ -159,11 +137,9 @@ public class DBcalls {
         }
         try {
             Statement st = con.createStatement();
-            String query = "Select price FROM " + Table_ID + " WHERE model SIMILAR  TO '%" + Part_ID + "%';";
-            ;
+            String query = "Select price FROM parts WHERE model SIMILAR  TO '%" + Part_ID + "%';";
             ResultSet rs = st.executeQuery(query);
             rs.next();
-
             int price = ((rs.getInt("price") * 13 / 10));
             System.out.println("Price offer " +
                     "for " + Part_ID + " is " + price);
@@ -171,6 +147,97 @@ public class DBcalls {
             e.printStackTrace();
         }
     }
+    //converted to new system
+
+    private static int systemprice(Connection con, String system) {
+        //calculates the price of a system.
+        ArrayList<String> syspartlist = new ArrayList<String>();
+        int price = 0;
+        try {
+            Statement st = con.createStatement();
+            String query = "Select * FROM  computer  WHERE model SIMILAR  TO '%" + system + "%';";
+            ResultSet rs = st.executeQuery(query);
+            rs.next();
+            syspartlist.add(rs.getString("cpu"));
+            syspartlist.add(rs.getString("ram"));
+            syspartlist.add(rs.getString("Storage"));
+            syspartlist.add(rs.getString("Motherboard"));
+            syspartlist.add(rs.getString("computercase"));
+            syspartlist.add(rs.getString("graphics"));
+            for (String Part_ID : syspartlist) {
+                // System.out.println(Part_ID);
+                if (Part_ID != null) {
+                    try {
+                        query = "Select price FROM  parts WHERE model SIMILAR  TO '%" + Part_ID + "%';";
+                        rs = st.executeQuery(query);
+                        rs.next();
+                        int tempvalue = rs.getInt("price");
+                        ;
+                        price += tempvalue;
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        System.out.println("there was a problem with a Part");
+                    }
+                }
+            }
+            return price;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("there was a problem with a system");
+        }
+
+        System.out.print(price);
+        return price;
+    }
+
+    //converted to new system
+    public static void Restockinglist(Connection con) {
+        //Prints a list of things to restock.
+       String query = "SELECT model,stock,refillstock from parts";
+            try {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(query);
+                System.out.println("Model                          | In Stock | preferred level | to restock");
+                while (rs.next()) {
+                    String model = rs.getString("model");
+                    int stock = rs.getInt("stock");
+                    int restock = rs.getInt("refillstock");
+                    if (stock < restock) {
+                        System.out.println(model + " | " + stock + "       | " + restock + "               | " + (restock - stock));
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    //Converted to new system
+    public static void Restock(Connection con) {
+        //restocks the Stock.
+        ArrayList<String> Restocklist = new ArrayList<String>();
+
+        System.out.println("Model                          | In Stock | preferred level | restocking");
+        String query = "SELECT model,stock,refillstock from parts";
+            try {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(query);
+                while (rs.next()) {
+                    String model = rs.getString("model");
+                    int stock = rs.getInt("stock");
+                    int restock = rs.getInt("refillstock");
+                    if (stock < restock) {
+                        System.out.println(model + " | " + stock + " | " + restock + " | " + (restock - stock));
+                        Restocklist.add("UPDATE parts SET stock = refillstock WHERE model SIMILAR  TO '%" + model + "%';");
+                    }
+                }
+                for (String updatequery : Restocklist) {
+                    st.executeUpdate(updatequery);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
     public static void customsystem(Connection con) {
         try {
@@ -266,79 +333,6 @@ public class DBcalls {
 
     }
 
-    public static boolean checkpart(Connection con) {
-return false;
-    }
-
-    private static int systemprice(Connection con, String system) {
-        //calculates the price of a system.
-        ArrayList<String> syspartlist = new ArrayList<String>();
-        int price = 0;
-        String Table_ID = null;
-        try {
-            Statement st = con.createStatement();
-            String query = "Select * FROM  computer  WHERE model SIMILAR  TO '%" + system + "%';";
-            ResultSet rs = st.executeQuery(query);
-            rs.next();
-            syspartlist.add(rs.getString("cpu"));
-            syspartlist.add(rs.getString("ram"));
-            syspartlist.add(rs.getString("Storage"));
-            syspartlist.add(rs.getString("Motherboard"));
-            syspartlist.add(rs.getString("computercase"));
-            syspartlist.add(rs.getString("graphics"));
-            for (String Part_ID : syspartlist) {
-                // System.out.println(Part_ID);
-                if (Part_ID != null) {
-                    Table_ID = checktable(Part_ID);
-                    try {
-                        query = "Select price FROM  " + Table_ID + "  WHERE model SIMILAR  TO '%" + Part_ID + "%';";
-                        rs = st.executeQuery(query);
-                        rs.next();
-                        int tempvalue = rs.getInt("price");
-                        ;
-                        price += tempvalue;
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        System.out.println("there was a problem with a Part");
-                    }
-                }
-            }
-            return price;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("there was a problem with a system");
-        }
-
-        System.out.print(price);
-        return price;
-    }
-
-    public static void Printallpartswithprice(Connection con) {
-        //Prints all parts with price.
-        List<String> allpartsquery = new ArrayList<String>();
-        allpartsquery.add("SELECT cpu.model, cpu.price FROM public.cpu;");
-        allpartsquery.add("SELECT graphics.model, graphics.price FROM public.graphics;");
-        allpartsquery.add("SELECT ram.model, ram.price FROM public.ram;");
-        allpartsquery.add("SELECT motherboard.model, motherboard.price FROM public.motherboard;");
-        allpartsquery.add("SELECT storage.model, storage.price FROM public.storage;");
-        allpartsquery.add("SELECT computercase.model, computercase.price FROM public.computercase;");
-        System.out.println("Model" + "                          |" + " Price ");
-        for (String query : allpartsquery) {
-            try {
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery(query);
-                while (rs.next()) {
-                    String model = rs.getString("model");
-                    int price = rs.getInt("price");
-                    System.out.println(model + " | " + price);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public static void listsystems(Connection con) {
         //list all systems and their prices.
@@ -362,69 +356,5 @@ return false;
         }
     }
 
-    public static void Restockinglist(Connection con) {
-        //Prints a list of things to restock.
-        List<String> allpartsquery = new ArrayList<String>();
-        allpartsquery.add("SELECT cpu.model, cpu.stock, cpu.refillstock FROM public.cpu;");
-        allpartsquery.add("SELECT graphics.model, graphics.stock, graphics.refillstock FROM public.graphics;");
-        allpartsquery.add("SELECT ram.model, ram.stock, ram.refillstock FROM public.ram;");
-        allpartsquery.add("SELECT motherboard.model, motherboard.stock, motherboard.refillstock FROM public.motherboard;");
-        allpartsquery.add("SELECT storage.model, storage.stock, storage.refillstock FROM public.storage;");
-        allpartsquery.add("SELECT computercase.model, computercase.stock, computercase.refillstock FROM public.computercase;");
-        System.out.println("Model                          | In Stock | preferred level | restocking");
-        for (String query : allpartsquery) {
 
-            try {
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery(query);
-                String Table_ID;
-                while (rs.next()) {
-                    String model = rs.getString("model");
-                    int stock = rs.getInt("stock");
-                    int restock = rs.getInt("refillstock");
-                    if (stock < restock) {
-                        System.out.println(model + " | " + stock + " | " + restock + " | " + (restock - stock));
-                    }
-
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void Restock(Connection con) {
-        //restocks the Stock.
-        List<String> allpartsquery = new ArrayList<String>();
-        ArrayList<String> Restocklist = new ArrayList<String>();
-        String Table_ID;
-        allpartsquery.add("SELECT cpu.model, cpu.stock, cpu.refillstock FROM public.cpu;");
-        allpartsquery.add("SELECT graphics.model, graphics.stock, graphics.refillstock FROM public.graphics;");
-        allpartsquery.add("SELECT ram.model, ram.stock, ram.refillstock FROM public.ram;");
-        allpartsquery.add("SELECT motherboard.model, motherboard.stock, motherboard.refillstock FROM public.motherboard;");
-        allpartsquery.add("SELECT storage.model, storage.stock, storage.refillstock FROM public.storage;");
-        allpartsquery.add("SELECT computercase.model, computercase.stock, computercase.refillstock FROM public.computercase;");
-        System.out.println("Model                          | In Stock | preferred level | restocking");
-        for (String query : allpartsquery) {
-            try {
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery(query);
-                while (rs.next()) {
-                    String model = rs.getString("model");
-                    int stock = rs.getInt("stock");
-                    int restock = rs.getInt("refillstock");
-                    if (stock < restock) {
-                        System.out.println(model + " | " + stock + " | " + restock + " | " + (restock - stock));
-                        Table_ID = checktable(model);
-                        Restocklist.add("UPDATE " + Table_ID + " SET stock = refillstock WHERE model SIMILAR  TO '%" + model + "%';");
-                    }
-                }
-                for (String updatequery : Restocklist) {
-                    st.executeUpdate(updatequery);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
