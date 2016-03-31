@@ -1,0 +1,121 @@
+%Template by Mark Jervelund - D1 - 2015 - mjerv15@student.sdu.dk
+
+\documentclass[a4paper,10pt,titlepage]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[document]{ragged2e}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{datenumber}
+
+\setdatetoday
+\addtocounter{datenumber}{0} %date for dilierry standard is today
+\setdatebynumber{\thedatenumber}
+\date{}
+\setcounter{secnumdepth}{0}
+\pagestyle{fancy}
+\fancyhf{}
+
+\lhead{Mark Jervelund}
+\rhead{Mjerv15- D1}
+\rfoot{Page  \thepage \, of \pageref{LastPage}}
+
+
+\begin{document}
+\begin{titlepage}
+\centering
+    \vspace*{9\baselineskip}
+    \huge
+    \bfseries
+    Title \\
+    \normalfont 
+	\huge    
+    Databasedesign- og programmering and DM505  \\[4\baselineskip]
+    \normalfont
+	\includegraphics[scale=0.2]{SDU_logo}
+    \vfill
+    Mark Jervelund \\ Mjerv15 - D1 \\ 
+    \vspace{5mm}
+    IMADA \\
+    \vspace{5mm} Instructor \\ 
+    %Uffe Thorsen - math
+    %Kristine Vitting Klinkby Knudsen - Datalogi
+    %Martin Østergaard Villumsen - prog
+    Anders Bjørn Moeslund
+    \\ \vspace{5mm}
+    \textbf{\datedate} \\[2\baselineskip]
+\end{titlepage}
+
+\renewcommand{\thepage}{\roman{page}}% Roman numerals for page counter
+\tableofcontents
+
+\newpage
+\setcounter{page}{1}
+\renewcommand{\thepage}{\arabic{page}}
+\section{Assignment 1}
+\begin{equation*}
+(p \rightarrow q)\lor(\neg p \rightarrow \neg q)
+\end{equation*}
+%exsample of a table
+\begin{figure} [h]
+\begin{tabular}{l|l|l|l|l|l|l}
+
+p & q & $\neg $ p & $\neg $ q & p $\rightarrow $ q & ($\neg $ p $\rightarrow \neg $ q) & (p $ \rightarrow $ q) $\lor $($\neg $ p $\rightarrow \neg $ q) \\ \hline 
+0  & 0  & 1  & 1  & 1 & 1 & 0 \\ 
+0  & 1  & 1  & 0  & 1 & 0 & 0 \\ 
+1  & 0  & 0  & 1  & 0 & 1 & 0 \\ 
+1  & 1  & 0  & 0  & 1 & 1 & 0 \\
+
+\end{tabular}
+\vspace{2mm} \\
+\caption{Eksample of a table\label{fig:gull}}
+\end{figure}
+
+\subsection{Part B}
+
+\subsection{Part C}
+
+\section{Assignment 2}
+
+\subsection{Part A}
+
+\subsection{Part B}
+
+\subsection{Part C}
+
+\section{Assignment 3}
+
+\subsection{Part A}
+
+\subsection{Part B}
+
+\subsection{Part C}
+
+\section{Assignment 4}
+
+\subsection{Part A}
+
+\subsection{Part B}
+
+\subsection{Part C}
+
+\section{Assignment 5}
+
+\subsection{Part A}
+
+\subsection{Part B}
+
+\subsection{Part C}
+
+
+
+\end{document}
