@@ -4,7 +4,10 @@ import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+ * Created by Mark jervelund          <Mark@jervelund.com>  <Mjerv15>
+ *
+ */
 public class Main {
 
     public static void main(String[] args) {
@@ -29,7 +32,6 @@ public class Main {
             System.out.println("You have the following options");
             System.out.println("note you have to use the whole part name, and the correct capitallation");
             System.out.println("Listall or LA -> list all parts in stock"); //works
-            System.out.println("Listallprice or LAP -> list all prices of all parts in stock."); //works
             System.out.println("Listallsystems or LAS -> list all different systems, and how many can be built from the current stock"); //prints systems and their price,
             System.out.println("Priceoffer or PO -> enter part of system name to get price offer. price + 30 % around up to nearest 99 dkk"); //works and has a multiplier for systems.d
             System.out.println("Sell -> sell an item by listing the name of the item. this can be CPU-2999v3"); //works for parts and predesigned systems,
@@ -47,9 +49,6 @@ public class Main {
                     case "Listall":case "listall":case "la":case "LA":
                         DBcalls.Printallparts(con);
                         break;
-//                    case "Listallprint":case "listallprice":case "lap":case "LAP":
-//                        DBcalls.Printallpartswithprice(con);
-//                        break;
                     case "Listallsystems":case "LAS":case "las":case "listallsystems":
                         DBcalls.listsystems(con);
                         break;
