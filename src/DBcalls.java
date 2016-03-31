@@ -13,17 +13,37 @@ public class DBcalls {
     // converted to new format
     //prints all the parts in the parts table with prices and stock
     public static void Printallparts(Connection con) {
-        String query = "SELECT model,price,stock from parts;";
+        String query = "SELECT model,stock from parts;";
         try {
             Statement st = con.createStatement();
 
 
             ResultSet rs = st.executeQuery(query);
-            System.out.println("Model                         | Stock | Price");
+            System.out.println("Model                         | Stock");
             while (rs.next()) {
 
                 System.out.print(rs.getString("model"));
                 System.out.print("| " + rs.getString("stock"));
+
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void Printallpartsprice(Connection con) {
+        String query = "SELECT model,price from parts;";
+        try {
+            Statement st = con.createStatement();
+
+
+            ResultSet rs = st.executeQuery(query);
+            System.out.println("Model                         | Price");
+            while (rs.next()) {
+
+                System.out.print(rs.getString("model"));
+
                 System.out.println("    | " + rs.getString("price"));
 
 

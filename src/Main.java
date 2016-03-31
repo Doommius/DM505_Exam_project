@@ -17,12 +17,10 @@ public class Main {
             String user = "postgres";
             String password = "12";
             Connection con = null;
-
             //CONNECTING
             try {
                 System.out.println("Connecting to database");
                 con = DriverManager.getConnection(url, user, password);
-
             } catch (SQLException ex) {
                 Logger lgr = Logger.getLogger(DBcalls.class.getName());
                 lgr.log(Level.WARNING, ex.getMessage(), ex);
@@ -31,7 +29,8 @@ public class Main {
             System.out.println("welcome to the computer store system");
             System.out.println("You have the following options");
             System.out.println("note you have to use the whole part name(sometimes), and the correct capitallation");
-            System.out.println("Listall or LA -> list all parts in stock"); //works
+            System.out.println("Listall or LA -> list all parts with stock"); //works
+            System.out.println("Listallprice or LAP -> list all parts with price");
             System.out.println("Listallsystems or LAS -> list all different systems, and how many can be built from the current stock"); //prints systems and their price,
             System.out.println("Priceoffer or PO -> enter part of system name to get price offer. price + 30 % around up to nearest 99 dkk"); //works and has a multiplier for systems.d
             System.out.println("Sell -> sell an item by listing the name of the item. this can be CPU-2999v3"); //works for parts and predesigned systems,
@@ -51,6 +50,9 @@ public class Main {
                         break;
                     case "Listallsystems":case "LAS":case "las":case "listallsystems":
                         DBcalls.listsystems(con);
+                        break;
+                    case"LAP":case"listallpartsprice":case"Listallprice":case"lap":
+                        DBcalls.Printallpartsprice(con);
                         break;
                     case "PriceOffer":case "PO":case "po":case "priceoffer":
                         System.out.println("price offer test");
