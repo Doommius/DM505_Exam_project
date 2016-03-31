@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class DBcalls {
 
     // converted to new format
+    //prints all the parts in the parts table with prices and stock
     public static void Printallparts(Connection con) {
         String query = "SELECT model,price,stock from parts;";
         try {
@@ -33,6 +34,7 @@ public class DBcalls {
     }
 
     // converted to new format only works with single parts atm
+    //updates the stock of a item in the parts table.
     public static void Sellitem(Connection con) {
         //sells an item.
         String Part_ID = null;
@@ -67,6 +69,7 @@ public class DBcalls {
     }
 
     //converted to new format
+    //Sells a system, and updates that part number in parts
     private static void sellsystem(Connection con, String system) {
         //calculates the price of a system.
         ArrayList<String> syspartlist = new ArrayList<String>();
@@ -108,6 +111,7 @@ public class DBcalls {
     }
 
     //converted to new system
+    //prints a price offer for parts, and systems, systems are handled by the systemprice function.
     public static void Priceoffer(Connection con) {
         //returns price for parts and systems.
         String Part_ID = null;
@@ -142,7 +146,7 @@ public class DBcalls {
         }
     }
     //converted to new system
-
+    //calculates the price for a system and returns it as an int.
     private static int systemprice(Connection con, String system) {
         //calculates the price of a system.
         ArrayList<String> syspartlist = new ArrayList<String>();
@@ -187,6 +191,7 @@ public class DBcalls {
     }
 
     //converted to new system
+    //prints a list of all parts not fully stocked.
     public static void Restockinglist(Connection con) {
         //Prints a list of things to restock.
         String query = "SELECT model,stock,refillstock from parts";
@@ -208,6 +213,7 @@ public class DBcalls {
     }
 
     //Converted to new system
+    //restocks all parts in the database
     public static void Restock(Connection con) {
         //restocks the Stock.
         ArrayList<String> Restocklist = new ArrayList<String>();
@@ -235,6 +241,7 @@ public class DBcalls {
     }
 
     //Converted to new system
+    //list all prebuilt systems in the database.
     public static void listsystems(Connection con) {
         //list all systems and their prices.
         String query = "Select * from Computer";
@@ -251,7 +258,9 @@ public class DBcalls {
         }
     }
 
-    public static boolean isindb(Connection con, String Part_ID) {
+    // need to be used in custom system
+    // checks if a entry is in the database.
+     public static boolean isindb(Connection con, String Part_ID) {
         try {
             Statement st = con.createStatement();
             ResultSet exsist = (st.executeQuery("SELECT COUNT(*) model From parts where model SIMILAR  TO '%" + Part_ID + "%';"));
@@ -266,6 +275,8 @@ public class DBcalls {
         return false;
     }
 
+    // works, but no safeguards.
+    //get a price offer on a custom system.
     public static void customsystem(Connection con) {
         try {
             ArrayList<String> syspartlist = new ArrayList<String>();
