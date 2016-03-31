@@ -1,31 +1,23 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-
 /**
  * Created by Mark jervelund          <Mark@jervelund.com>  <Mjerv15>
  * Start with java -cp postgresql-9.4-1201.jdbc4.jar:. DBtest
  */
-
 public class DBcalls {
 
     // converted to new format
     //prints all the parts in the parts table with prices and stock
     public static void Printallparts(Connection con) {
-        String query = "SELECT model,stock from parts;";
+        String query = "SELECT model,stock from parts Order by model;";
         try {
             Statement st = con.createStatement();
-
-
             ResultSet rs = st.executeQuery(query);
             System.out.println("Model                         | Stock");
             while (rs.next()) {
-
                 System.out.print(rs.getString("model"));
-                System.out.print("| " + rs.getString("stock"));
-
-
+                System.out.println("| " + rs.getString("stock"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -33,7 +25,7 @@ public class DBcalls {
     }
 
     public static void Printallpartsprice(Connection con) {
-        String query = "SELECT model,price from parts;";
+        String query = "SELECT model,price from parts Order by model;";
         try {
             Statement st = con.createStatement();
 
@@ -165,6 +157,7 @@ public class DBcalls {
             e.printStackTrace();
         }
     }
+
     //converted to new system
     //calculates the price for a system and returns it as an int.
     private static int systemprice(Connection con, String system) {
@@ -214,7 +207,7 @@ public class DBcalls {
     //prints a list of all parts not fully stocked.
     public static void Restockinglist(Connection con) {
         //Prints a list of things to restock.
-        String query = "SELECT model,stock,refillstock from parts";
+        String query = "SELECT model,stock,refillstock from parts Order by model";
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
@@ -239,7 +232,7 @@ public class DBcalls {
         ArrayList<String> Restocklist = new ArrayList<String>();
 
         System.out.println("Model                          | In Stock | preferred level | restocking");
-        String query = "SELECT model,stock,refillstock from parts";
+        String query = "SELECT model,stock,refillstock from parts Order by model";
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
@@ -280,7 +273,7 @@ public class DBcalls {
 
     // need to be used in custom system
     // checks if a entry is in the database.
-     public static boolean isindb(Connection con, String Part_ID) {
+    public static boolean isindb(Connection con, String Part_ID) {
         try {
             Statement st = con.createStatement();
             ResultSet exsist = (st.executeQuery("SELECT COUNT(*) model From parts where model SIMILAR  TO '%" + Part_ID + "%';"));
@@ -398,8 +391,6 @@ public class DBcalls {
                             System.out.println("Invalid choice, please pick again.");
                             menupick = "blank";
                             break;
-
-
                     }
                 }
 
@@ -422,7 +413,7 @@ public class DBcalls {
             }
             int price = 0;
             for (String Part_ID : syspartlist) {
-                // System.out.println(Part_ID);
+                ;
                 if (Part_ID != null) {
                     try {
                         query = "Select price FROM  parts WHERE model SIMILAR  TO '%" + Part_ID + "%';";

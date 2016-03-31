@@ -12,7 +12,6 @@ public class Main {
 
     public static void main(String[] args) {
         {
-//            String url = "jdbc:postgresql://localhost:5432/Computerproject";
             String url = "jdbc:postgresql://localhost:5432/postgres";
             String user = "postgres";
             String password = "12";
@@ -38,7 +37,7 @@ public class Main {
             System.out.println("Restockinglist -> this will manually restock the system.(all parts)"); //Works
             System.out.println("RESTOCK, Restocks the database"); //works.
             boolean keeprun = true;
-
+            //runs while loop until user writes exit in command line.
             while (keeprun == true) {
                 System.out.println("Enter what you choose to Select.");
                 Scanner menu = new Scanner(System.in);
@@ -78,10 +77,7 @@ public class Main {
                         System.out.println("Invalid choice, please pick again.");
                         menupick = "blank";
                         break;
-
-
                 }
-                //}
             }
         }
     }
