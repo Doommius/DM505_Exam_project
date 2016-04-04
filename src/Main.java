@@ -29,11 +29,11 @@ public class Main {
             System.out.println("You have the following options");
             System.out.println("note you have to use the whole part name(sometimes), and the correct capitallation");
             System.out.println("Listall or LA -> list all parts with stock"); //works
-            System.out.println("Listallprice or LAP -> list all parts with price");
-            System.out.println("Listallsystems or LAS -> list all different systems, and how many can be built from the current stock"); //prints systems and their price,
-            System.out.println("Priceoffer or PO -> enter part of system name to get price offer. price + 30 % around up to nearest 99 dkk"); //works and has a multiplier for systems.d
-            System.out.println("Sell -> sell an item by listing the name of the item. this can be CPU-2999v3"); //works for parts and predesigned systems,
-            System.out.println("Customsystem or CS -> price offer for custom system - Note, there are no safeguards, so its eazy to break.");
+            System.out.println("Listallprice or LAP -> list all parts with price"); //works
+            System.out.println("Listallsystems or LAS -> list all different systems,price and how many can be built from the current stock"); //works
+            System.out.println("Priceoffer or PO -> enter part or system name to get price offer. price + 30 % rounded up to nearest 99 dkk"); //works and has a multiplier for systems.d
+            System.out.println("Sell -> sell an item by listing the name of the item. this can be CPU-2999v3 or SYS-7"); //works for parts and predesigned systems,
+            System.out.println("Customsystem or CS -> price offer for custom system - Note, there are no safeguards, so only input whats given by system and in same capitalisation..");
             System.out.println("Restockinglist -> this will manually restock the system.(all parts)"); //Works
             System.out.println("RESTOCK, Restocks the database"); //works.
             boolean keeprun = true;

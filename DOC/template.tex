@@ -36,7 +36,7 @@
     \vspace*{9\baselineskip}
     \huge
     \bfseries
-    Title \\
+    Computer store Database System \\
     \normalfont 
 	\huge    
     Databasedesign- og programmering and DM505  \\[4\baselineskip]
@@ -61,60 +61,70 @@
 \newpage
 \setcounter{page}{1}
 \renewcommand{\thepage}{\arabic{page}}
-\section{Assignment 1}
-\begin{equation*}
-(p \rightarrow q)\lor(\neg p \rightarrow \neg q)
-\end{equation*}
-%exsample of a table
-\begin{figure} [h]
-\begin{tabular}{l|l|l|l|l|l|l}
+\section{Specification}
+The task in this project is to design and implement a database for a computer store. this should be implemented using a database, in this project postgres was used. at least name, type and price should be implemented and the different parts should have the following attributes:
+\\
+CPU : socket and bus speed
+\\
+RAM : Type and bus speed
+\\
+Motherboard : CPU socket, Ram type, form factor and on-board graphics?
+\\
+I moved the on-board graphics to the CPU and that it is where it is in modern computers,(since it has the questions mark after it.)
+\\
+Case: form factor
+\\
+Computer system: Name and catchy name:
+\\
+All the parts in the system should have a Current stock, a allowed minimum and a preferred stock after restocking.
 
-p & q & $\neg $ p & $\neg $ q & p $\rightarrow $ q & ($\neg $ p $\rightarrow \neg $ q) & (p $ \rightarrow $ q) $\lor $($\neg $ p $\rightarrow \neg $ q) \\ \hline 
-0  & 0  & 1  & 1  & 1 & 1 & 0 \\ 
-0  & 1  & 1  & 0  & 1 & 0 & 0 \\ 
-1  & 0  & 0  & 1  & 0 & 1 & 0 \\ 
-1  & 1  & 0  & 0  & 1 & 1 & 0 \\
+The selling price for a part is its price + 30 \%
+and the selling price for a system is the price of all its part + 30 \% rounded up to the nearest 99. if a buying is buying multiple systems there is a discount of 2 \% per additional system up to a maximum discount of 20 \%
 
-\end{tabular}
-\vspace{2mm} \\
-\caption{Eksample of a table\label{fig:gull}}
-\end{figure}
+the minium specification for the system is that it needs to be able to:
+\\
+List all parts in system and their current stock
+\\
+List all systems in the system and how many can be built from the current stock.
+\\
+Price list, list all parts grouped by their kind, with sell price. as well as all computer systems that could be built from the current stock, including their components and selling price,
+\\
+Price offer, give a price offer for a system and the quantity.
+\\ 
+sell a component and a computer system by updating the current stock.
+\\
+Restocking list, including names, and how many of each item is needed for preferred level. 
+\\
 
-\subsection{Part B}
 
-\subsection{Part C}
+\newpage
+\section{Design}
+I designed the database by making a ER diagram, It can be seen in the appendix.
+I have the Parts or components table with the following columns:
+\\
+Model, type, price, stock, refillstock, and producer. 
+\\
+there is a constraint on stock, so it cant go below 0, therefor eliminating the need for a minimum stock.
+there is then a table for each part type, Ram, CPU, graphics, storage, and computercase, which has all non shared common columns.
+in addition there is a systems table that has the pre-built systems, this has a model, name, cpu, ram, motherboard, storage, computer case, and graphics columns.
 
-\section{Assignment 2}
 
-\subsection{Part A}
 
-\subsection{Part B}
 
-\subsection{Part C}
 
-\section{Assignment 3}
+\section{Implementation}
+\section{Testing}
+\section{Conclusion}
+\section{Appendix}
+\subsection{ER-Diagram}
+\\
+\includegraphics[scale=0.5]{3NFdiagram.png}
 
-\subsection{Part A}
-
-\subsection{Part B}
-
-\subsection{Part C}
-
-\section{Assignment 4}
-
-\subsection{Part A}
-
-\subsection{Part B}
-
-\subsection{Part C}
-
-\section{Assignment 5}
-
-\subsection{Part A}
-
-\subsection{Part B}
-
-\subsection{Part C}
+1. A diagram of your E/R model, the schemas of your relations
+(probably in an appendix),
+2. Arguments showing that these are in 3NF,
+3. The central parts (with explanation) of your SQL code, and
+4. A (very) short user manual for the application.
 
 
 
