@@ -52,13 +52,13 @@ CREATE TABLE graphics  (
 
 CREATE TABLE computer(
   model CHAR(30) PRIMARY KEY,
-  name CHAR(30),
-  CPU CHAR(30),
-  ram CHAR(30),
-  Storage CHAR(30),
-  Motherboard Char(30),
-  Computercase Char(30),
-  graphics Char(30)
+  name CHAR(30) references parts (model),
+  CPU CHAR(30) references parts (model),
+  ram CHAR(30) references parts (model),
+  Storage CHAR(30) references parts (model),
+  Motherboard Char(30)references parts (model),
+  Computercase Char(30)references parts (model),
+  graphics Char(30)references parts (model)
 );
 
 INSERT INTO parts (model, type, price, stock, refillstock, producer)
