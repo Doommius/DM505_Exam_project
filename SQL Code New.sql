@@ -9,7 +9,7 @@ CREATE TABLE parts (
 );
 
 CREATE TABLE CPU (
-        model CHAR(30) PRIMARY KEY,
+        model CHAR(30)references parts (model),
         speed DECIMAL(4,2),
         Socket CHAR(10),
         cores integer,
@@ -18,33 +18,33 @@ CREATE TABLE CPU (
 );
 
 CREATE TABLE Storage (
-        model CHAR(30) PRIMARY KEY,
+        model CHAR(30) references parts (model),
         typessd Boolean,
         spaceGB integer
 
 );
 
 CREATE TABLE Motherboard (
-        model CHAR(30) PRIMARY KEY,
+        model CHAR(30) references parts (model),
         Socket CHAR(10),
         formfactor CHAR(10),
         RAMtype CHAR(10)
 );
 
 CREATE TABLE ram (
-        model CHAR(30) PRIMARY KEY,
+        model CHAR(30) references parts (model),
         sizeingb integer,
         RAMtype CHAR(10),
         FSB integer
 );
 
 CREATE TABLE computercase (
-        model CHAR(30) PRIMARY KEY,
+        model CHAR(30) references parts (model),
         formfactor CHAR(10)
 );
 
 CREATE TABLE graphics  (
-        model CHAR(30) PRIMARY KEY,
+        model CHAR(30) references parts (model),
         speed DECIMAL(4,2),
         ramgb numeric(5,2)
 );
