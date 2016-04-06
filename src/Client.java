@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  * Created by Mark jervelund          <Mark@jervelund.com>  <Mjerv15>
  *
  */
-public class Main {
+public class Client {
 
     public static void main(String[] args) {
         {
@@ -25,7 +25,7 @@ public class Main {
                 lgr.log(Level.WARNING, ex.getMessage(), ex);
                 System.out.println("Connection failed");
             }
-            System.out.println("welcome to the computer store system");
+            System.out.println("welcome to the computer store system ");
             System.out.println("You have the following options");
             System.out.println("note you have to use the whole part name(sometimes), and the correct capitallation");
             System.out.println("Listall or LA -> list all parts with stock"); //works

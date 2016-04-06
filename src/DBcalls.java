@@ -7,6 +7,7 @@ import java.util.Scanner;
  */
 public class DBcalls {
 
+
     // converted to new format
     //prints all the parts in the parts table with prices and stock
     public static void Printallparts(Connection con) {
@@ -76,7 +77,8 @@ public class DBcalls {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Part "+Part_ID+" is sold out!");
+            //e.printStackTrace();
         }
     }
 
