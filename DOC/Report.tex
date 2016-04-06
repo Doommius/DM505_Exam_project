@@ -1,0 +1,271 @@
+%Template by Mark Jervelund - D1 - 2015 - mjerv15@student.sdu.dk
+
+\documentclass[a4paper,10pt,titlepage]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[document]{ragged2e}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{datenumber}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{textcomp}
+
+\setdatetoday
+\addtocounter{datenumber}{0} %date for dilierry standard is today
+\setdatebynumber{\thedatenumber}
+\date{}
+\setcounter{secnumdepth}{0}
+\pagestyle{fancy}
+\fancyhf{}
+\lstset{
+         numbers=left,               
+         stepnumber=3,                 
+         firstnumber=1,
+         breaklines=true,
+         numberfirstline=true
+ }
+
+\lhead{Mark Jervelund}
+\rhead{Mjerv15- D1}
+\rfoot{Page  \thepage \, of \pageref{LastPage}}
+
+
+\begin{document}
+\begin{titlepage}
+\centering
+    \vspace*{9\baselineskip}
+    \huge
+    \bfseries
+    Computer store Database System \\
+    \normalfont 
+	\huge    
+    Databasedesign- og programmering and DM505  \\[4\baselineskip]
+    \normalfont
+	\includegraphics[scale=0.2]{SDU_logo}
+    \vfill
+    Mark Jervelund \\ Mjerv15 - D1 \\ 
+    \vspace{5mm}
+    IMADA \\
+    \vspace{5mm} Instructor \\ 
+    %Uffe Thorsen - math
+    %Kristine Vitting Klinkby Knudsen - Datalogi
+    %Martin Østergaard Villumsen - prog
+    Anders Bjørn Moeslund
+    \\ \vspace{5mm}
+    \textbf{\datedate} \\[2\baselineskip]
+\end{titlepage}
+
+\renewcommand{\thepage}{\roman{page}}% Roman numerals for page counter
+\tableofcontents
+
+\newpage
+\setcounter{page}{1}
+\renewcommand{\thepage}{\arabic{page}}
+\section{Specification}
+The task in this project is to design and implement a database for a computer store. this should be implemented using a database, in this project postgres was used. at least name, type and price should be implemented and the different parts should have the following attributes:
+\\ \vspace{2 mm}
+CPU : socket and bus speed
+\\ \vspace{2 mm}
+RAM : Type and bus speed
+\\ \vspace{2 mm}
+Motherboard : CPU socket, Ram type, form factor and on-board graphics?
+\\ \vspace{2 mm}
+I moved the on-board graphics to the CPU and that it is where it is in modern computers,(since it has the questions mark after it.)
+\\ \vspace{2 mm} 
+Case: form factor
+\\ \vspace{2 mm}
+Computer system: Name and catchy name:
+\\ \vspace{2 mm}
+All the parts in the system should have a Current stock, a allowed minimum and a preferred stock after restocking.
+\\ \vspace{2 mm}
+The selling price for a part is its price + 30 \%
+and the selling price for a system is the price of all its part + 30 \% rounded up to the nearest 99. if a buying is buying multiple systems there is a discount of 2 \% per additional system up to a maximum discount of 20 \%
+
+The minium specification for the system is that it needs to be able to:
+\\ \vspace{2 mm}
+List all parts in system and their current stock
+\\ \vspace{2 mm}
+List all systems in the system and how many can be built from the current stock.
+\\ \vspace{2 mm}
+Price list, list all parts grouped by their kind, with sell price. as well as all computer systems that could be built from the current stock, including their components and selling price,
+\\ \vspace{2 mm}
+Price offer, give a price offer for a system and the quantity.
+\\ \vspace{2 mm}
+Sell a component and a computer system by updating the current stock.
+\\ \vspace{2 mm}
+Restocking list, including names, and how many of each item is needed for preferred level. 
+\\ \vspace{5 mm}
+
+\section{Design}
+I designed the database by making a ER diagram, It can be seen in the appendix.
+I have the Parts or components table with the following columns:
+\\ \vspace{2 mm}
+Model, type, price, stock, refillstock, and producer. 
+\\ \vspace{2 mm}
+There is constraints on stock, price, and refill stock
+\\
+there is then a table for each part type, Ram, CPU, graphics, storage, and computercase, which has all non shared common columns.
+in addition there is a systems table that has the pre-built systems, this has a model, name, cpu, ram, motherboard, storage, computer case, and graphics columns.
+\\
+The interface is designed using command line java. which gets all the information from the postgres database.
+
+
+
+
+\newpage
+\section{Implementation}
+\subsection{Debase implementation}
+
+The code for the Table looks like the following.
+\lstinputlisting[language=SQL]{Partstable.sql}
+
+The sceme for parts is implemented with a model ID, type, price, stock, refillstock and producer.
+\\
+It has constraints so you cant mistakenly enter a price that is negative.
+\\
+Stock is implemented to minimum stock is implemented as a constraint that is 0, so you cant sell a part that is out of stock. and refill stock cant be below 0. to avoid user input error.
+\\ \vspace{2 mm}
+Each of the different type of parts has the own tables as they have non common attributes.. an example of this is the CPU table. The model name in each of the individual part tables references the main parts table with prices, producer, stock, and refillstock. where the individual tables store details, like speed, cores, storage, and other specification.
+\lstinputlisting[language=SQL]{CPUtable.sql}
+The data was inserted into the database using the insert function, this can be seen below. 
+\lstinputlisting[language=SQL]{CPUinsert.sql}
+\vspace{5 mm}
+All of the sql code for building the database can be seen in the file DB.SQL in the included zip folder.
+\newpage
+\subsection{Client implementation}
+The client is implemented in java. here I'll go over the different functions of the database.
+The user interface is using the cmd promt, the input is accepted via scanners, and used using cases. an an example of this is:
+\lstinputlisting[language=Java]{case.java}
+This works by having the user input data into the scanner via system.in and then selecting the function in the DB calls class that does what the user requested.
+\subsection{Connection}
+For connection to the database the client uses the postgres driver and logs in using the information postgres and the password 12. if the connection to the database fails the program prints "Connection failed" which shows the user something went wrong when connecting to the database.
+\lstinputlisting[language=Java]{Connection.java}
+\subsection{List all parts}
+The list all functions selects stock and model from parts and orders them by model, and then prints them to the command promt.
+\lstinputlisting[language=Java]{listall.java}
+\subsection{list all parts with price}
+This is almost the same command as the one above but with this two following lines changed.
+This does so it also selects the price from parts, and prints it and adds 30 \% to the price.	
+\lstinputlisting[language=Java]{printallpartswithprice.java}
+\subsection{List all systems}
+The list systems list the systems, their sell price, and how many can be built from the stock. it uses 3 functions, the system stock, the system price, and it self to print to needed information to the user.
+\\ \vspace{5 mm}
+First the client side program fetches system models, and names then it calls the system price, and system stock function that calculates the price, and how many systems can be built form the stock. when this is done it does this again for the next system while rs.next is true.
+\lstinputlisting[language=Java]{listsystems.java}
+the list stock function fetches the stock for the part needed for the system with the lowest stock and returns this which is then returned.
+
+\lstinputlisting[language=Java]{listsystemsstock.java}
+
+The system price function fetches all the parts needed for a system, adds them to a list, and uses a foreach loop to fetch and sum the price for all the parts needed for the system and returns this.
+\lstinputlisting[language=Java]{systemprice.java}
+\subsection{price offer}
+The price offer works both for parts and systems, and parts, the parts and handed by the function itself, and the price for systems is handed by the systems price function. for systems it has a multiplier input, which calculates the discount that is up to 20 \%.
+\lstinputlisting[language=Java]{priceoffer.java}
+\subsection{Sell}
+The sell function is split into 2 functions, the sell function which handles parts, and the sell systems, which handles systems.
+\\ \vspace{5 mm}
+The sell function works by updating the stock of the parts to stock - 1, but it first checks if the part exist into the database, and if not it returns an error, or if the input matches multiple parts, like when entering HDD-530 which returns 3 different hard drives. 
+\lstinputlisting[language=Java]{sell.java}
+\vspace{5 mm}
+The sell system selects * from system where the model is similar to the requested part.
+these parts are then added to a list, which is used in a for each in list, it then calls the update parts set stock $=$ stock $-1 $where model similar to part\_id from the list. 
+\lstinputlisting[language=Java]{sellsystem.java}
+\subsection{Restocking list}
+The restocking list works by selecting model, stock and refill stock from parts, and prints them if stock is lower than refill value.
+\lstinputlisting[language=Java]{restockinglist.java}
+\subsection{Restock}
+The restock function works almost the same as the restockinglist. this just adds the update statement to a list, and executes the update via a for each loop when it has checked all the parts.
+\lstinputlisting[language=Java]{restock.java}
+\subsection{Custom system}
+The Custom system is implemented by the user first selecting a CPU, then Motherboard, Ram, storage, case, and then lastly is asked if they want graphics if the CPU the user choose doesn't have a included graphic chip.
+This is the code for the cpu, it prints all cpus in the system, and asks the users which one the user wants to use. 
+\lstinputlisting[language=Java]{customsystemcpu.java}
+The middles stages include, motherboard, ram, case, storage which sql code that looks like the following. \\
+Its from the 4 middle parts where the system fetches Motherboards, depending on what cpu was picked. \\
+From ram where ramtype from motherboard and fsb from cpu matches.\\
+any part from storage since they all match, \\
+and a case where the formfactor matches that of the motheboard.
+\lstinputlisting[language=SQL]{customsystemmiddle.sql}
+Before the graphics card can be selected the program checks if the system has on-board graphics, if it has, it asks the user if the user wants to include a graphics card anyway. this is done using a scanner and 3 cases, yes, no, and repick if the users picked a invalid choice. 
+\lstinputlisting[language=java]{customsystemgrafics.java}
+When the user has chosen rather to have a graphics card or not the programs asks the user to enter a model name for the graphics card the users decides to use.
+when this is done the system compiles a price for the system using a list of parts made when picking the prices, and calculates the price for the parts using a for each loop.
+\lstinputlisting[language=java]{customsystemprice.java}
+\section{Testing}
+I have tested all the functions of the program and the results can be seen here. \\
+\vspace{5 mm}
+\subsection{List all parts}
+list all parts with price returns the information like it should, i have included a small part of it here. \\
+Model                         | Price\\
+CASE-mini                         | 520 \\
+CASE-supreme                      | 1040 \\
+CPU-E5-1320-v3                    | 4618 \\
+CPU-E5-2999-v3                    | 48643 \\
+CPU-FX-4300                       | 783 \\
+\vspace{5 mm}
+\subsection{List all parts with stock}
+list all parts with stock returns (i have only include a small part) \\
+Model                         | Stock \\
+CASE-mini                     | 20\\ 
+CASE-supreme                  | 19\\
+CPU-E5-1320-v3                | 11\\
+CPU-E5-2999-v3                | 12\\
+CPU-FX-4300                   | 12\\
+CPU-FX-6300                   | 12\\
+CPU-FX-8350                   | 12\\
+\vspace{5 mm}
+\subsection{List all systems}
+List systems returns, (i have only include a small part)\\
+Model                         name                          build cost     price offer stock \\
+SYS-1                         Blzing Firestorm              18618      |    24299    |   7\\
+SYS-2                         Starstruck                    5699      |    7499    |   7\\
+\vspace{5 mm}
+\subsection{Price offer}
+i entered sys-8 and a multiplier of 5 discount of 8 \% which returned 59795 \\
+To check that the output is correct i calculated what i should b \\
+(12999*5)*0.92 = 59795.4 \\
+From that i can conclude that the function returns the correct price using the formulas i designed. \\
+\vspace{5 mm}
+\subsection{Sell}
+I tested this by first checking stock of CASE-mini which was 20, i then sold 1. and checked stock again and it was 19 therefor i can confirm that selling of a single part works. i then tested this with a system. \\
+I did this by checking what parts are needed and writing down the stock. then i sold the system i checked the parts for, and then checked if the stock of these parts fell by one when selling a system.
+\\
+\vspace{5 mm}
+\subsection{Restocking list}
+I checked that the restocking list worked by printing the restocking list after selling some parts, and noting down how many i sold, and confirmed that it printed the correct amount.
+\\
+\vspace{5 mm}
+\subsection{Restock}
+I checked by first running the restocking list since i confirmed it worked, then i ran the restocking function, and the last i ran the restocking list function to confirm that it didn't print anything.
+\\
+\vspace{5 mm}
+\subsection{Custom system}
+I tested the custom system using CPU-I7-6700k as the cpu, MB-ASUS-Z170K as the motherboard, RAM-Kingston-DDR4-16gb as ram, HDD-530-256 as storage, and CASE-supreme as the case. 
+and by calculating the prices in hand i can confirm that this system works as it should.
+
+\section{Conclusion}
+For the testing i have done on the system i can confirm that the system works as it should.
+\section{Appendix}
+\subsection{ER-Diagram}
+
+\includegraphics[scale=0.5]{3NFdiagram.png}
+
+1. A diagram of your E/R model, the schemas of your relations 
+(probably in an appendix),\\
+2. Arguments showing that these are in 3NF, \\
+3. The central parts (with explanation) of your SQL code, and \\
+4. A (very) short user manual for the application. \\
+
+
+
+\end{document}

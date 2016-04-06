@@ -252,14 +252,14 @@ public class DBcalls {
     //list all prebuilt systems in the database.
     public static void listsystems(Connection con) {
         //list all systems and their prices.
-        String query = "Select * from Computer";
+        String query = "Select model, name from Computer";
         System.out.println("Model                         name                          build cost     price offer stock");
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
                 String model = rs.getString("model");
-                System.out.println(model + rs.getString("name") + systemprice(con, model) + "           " + ((((systemprice(con, model)) * 13 / 10) / 100) * 100 + 99)+"    |   "+systemstock(con, model));
+                System.out.println(model + rs.getString("name") + systemprice(con, model) + "      |    " + ((((systemprice(con, model)) * 13 / 10) / 100) * 100 + 99)+"    |   "+systemstock(con, model));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -315,7 +315,7 @@ public class DBcalls {
             Statement st = con.createStatement();
 
             //choose the cpu
-            System.out.println("You can use the following Storage for this sysyem");
+            System.out.println("You can use the following CPU for this sysyem");
             query = "Select model from cpu;";
             ResultSet rscpu = st.executeQuery(query);
             int columns = rscpu.getMetaData().getColumnCount();
