@@ -53,7 +53,7 @@
     \normalfont
 	\includegraphics[scale=0.2]{SDU_logo}
     \vfill
-    Mark Jervelund \\ Mjerv15 - D1 \\ 
+    Mark Jervelund \\ Mjerv15 - D2 \\ 
     \vspace{5mm}
     IMADA \\
     \vspace{5mm} Instructor \\ 
@@ -107,15 +107,26 @@ Restocking list, including names, and how many of each item is needed for prefer
 \\ \vspace{5 mm}
 
 \section{Design}
-I designed the database by making a ER diagram, It can be seen in the appendix.
+I designed the database by making a ER diagram, It can be seen in the appendix.\\
+The Database is in 3NF because,\\
+Parts is a subset of computers \\
+CPU is a subset of parts where the kind is CPU\\
+Storage is a is a subset of parts where the kind is Storage \\
+Motherboard is a subset of parts where the kind is MB \\
+Ram is a subset of parts where the kind is ram \\
+Graphics is a subset of parts where the kind is GPU \\
+Case is a subset of parts where the kind is CASE \\
+And there is no dependencies in the same schema. 
+
+\vspace{5 mm}
 I have the Parts or components table with the following columns:
 \\ \vspace{2 mm}
 Model, type, price, stock, refillstock, and producer. 
 \\ \vspace{2 mm}
 There is constraints on stock, price, and refill stock
 \\
-there is then a table for each part type, Ram, CPU, graphics, storage, and computercase, which has all non shared common columns.
-in addition there is a systems table that has the pre-built systems, this has a model, name, cpu, ram, motherboard, storage, computer case, and graphics columns.
+there is then a table for each part type, Ram, CPU, graphics, storage, and computercase, which contain all non shared common attributes.
+in addition there is a systems table that has the pre-built systems, this contains a model, name, cpu, ram, motherboard, storage, computer case, and graphics attributes for each system.
 \\
 The interface is designed using command line java. which gets all the information from the postgres database.
 
@@ -144,7 +155,7 @@ All of the sql code for building the database can be seen in the file DB.SQL in 
 \newpage
 \subsection{Client implementation}
 The client is implemented in java. here I'll go over the different functions of the database.
-The user interface is using the cmd promt, the input is accepted via scanners, and used using cases. an an example of this is:
+The user interface is using the command prompt, the input is accepted via scanners, and used using cases. an an example of this is:
 \lstinputlisting[language=Java]{case.java}
 This works by having the user input data into the scanner via system.in and then selecting the function in the DB calls class that does what the user requested.
 \subsection{Connection}
@@ -166,7 +177,7 @@ the list stock function fetches the stock for the part needed for the system wit
 
 \lstinputlisting[language=Java]{listsystemsstock.java}
 
-The system price function fetches all the parts needed for a system, adds them to a list, and uses a foreach loop to fetch and sum the price for all the parts needed for the system and returns this.
+The system price function fetches all the parts needed for a system, adds them to a list, and uses a for each loop to fetch and sum the price for all the parts needed for the system and returns this.
 \lstinputlisting[language=Java]{systemprice.java}
 \subsection{price offer}
 The price offer works both for parts and systems, and parts, the parts and handed by the function itself, and the price for systems is handed by the systems price function. for systems it has a multiplier input, which calculates the discount that is up to 20 \%.
@@ -194,7 +205,7 @@ The middles stages include, motherboard, ram, case, storage which sql code that 
 Its from the 4 middle parts where the system fetches Motherboards, depending on what cpu was picked. \\
 From ram where ramtype from motherboard and fsb from cpu matches.\\
 any part from storage since they all match, \\
-and a case where the formfactor matches that of the motheboard.
+and a case where the formfactor matches that of the motherboard.
 \lstinputlisting[language=SQL]{customsystemmiddle.sql}
 Before the graphics card can be selected the program checks if the system has on-board graphics, if it has, it asks the user if the user wants to include a graphics card anyway. this is done using a scanner and 3 cases, yes, no, and repick if the users picked a invalid choice. 
 \lstinputlisting[language=java]{customsystemgrafics.java}
@@ -231,7 +242,7 @@ SYS-1                         Blzing Firestorm              18618      |    2429
 SYS-2                         Starstruck                    5699      |    7499    |   7\\
 \vspace{5 mm}
 \subsection{Price offer}
-i entered sys-8 and a multiplier of 5 discount of 8 \% which returned 59795 \\
+i entered SYS-8 and a multiplier of 5 discount of 8 \% which returned 59795 \\
 To check that the output is correct i calculated what i should b \\
 (12999*5)*0.92 = 59795.4 \\
 From that i can conclude that the function returns the correct price using the formulas i designed. \\
@@ -252,20 +263,15 @@ I checked by first running the restocking list since i confirmed it worked, then
 \subsection{Custom system}
 I tested the custom system using CPU-I7-6700k as the cpu, MB-ASUS-Z170K as the motherboard, RAM-Kingston-DDR4-16gb as ram, HDD-530-256 as storage, and CASE-supreme as the case. 
 and by calculating the prices in hand i can confirm that this system works as it should.
-
+\section{User Manuel}
+You run the Client by either running the run.bat file (on windows in the included zip file) or using the command java -cp postgresql-9.4-1201.jdbc4.jar; Client, and the command java -cp postgresql-9.4-1201.jdbc4.jar:. Client on linux. \\
+The commands and what you can do is listed when you run the problem, it should just be noted that some of the functions are very picky about their input and its case sensitive.
 \section{Conclusion}
-For the testing i have done on the system i can confirm that the system works as it should.
+From the testing i have done the program meets the demands that have been met for the project, but it has some problems, like that the inputs are case sensitive, and that some of the input in the custom system, isn't as well implemented as it could have been.
 \section{Appendix}
 \subsection{ER-Diagram}
 
 \includegraphics[scale=0.5]{3NFdiagram.png}
-
-1. A diagram of your E/R model, the schemas of your relations 
-(probably in an appendix),\\
-2. Arguments showing that these are in 3NF, \\
-3. The central parts (with explanation) of your SQL code, and \\
-4. A (very) short user manual for the application. \\
-
 
 
 \end{document}
